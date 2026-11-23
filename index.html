@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#8b6f70">
+<meta name="description" content="مدیریت دخل‌وخرج خانه و حسابداری سفارش‌های کیک">
+<link rel="manifest" href="manifest.webmanifest">
+<title>دفتر مالی من</title>
+<style>
+:root{--bg:#f7f5f2;--card:#fffefd;--ink:#443f40;--muted:#898184;--rose:#b88791;--rose2:#f2e2e5;--green:#648b73;--line:#ece6e3;--gold:#c5a477;--softgreen:#e4f1e7;--softred:#f8e5e6;--shadow:0 8px 26px #5c48400d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,sans-serif;font-size:14px}
+header{padding:24px 18px 18px;background:linear-gradient(135deg,#f1dfdf,#f7eee5);border-radius:0 0 28px 28px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-size:21px;font-weight:800}.sub{color:#766968;font-size:12px;margin-top:4px}
+.pill{background:#fff9;border:1px solid #fff;padding:7px 11px;border-radius:99px;font-size:11px}
+main{max-width:760px;margin:auto;padding:14px 14px 90px}
+.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:-2px}
+.stat,.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+.stat small{color:var(--muted)}.stat strong{display:block;font-size:19px;margin-top:7px}.stat.primary{background:#f1e5e7;color:#76565e}.stat.primary small{color:#856b70}
+.stat.income-card{background:var(--softgreen);border-color:#d4e8d9}.stat.expense-card{background:var(--softred);border-color:#f0d5d7}.stat.profit-card{background:#e8f2e9;border-color:#d7e8d9}
+.section{margin-top:18px}.section h2{font-size:16px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{border:1px solid var(--line);background:var(--card);border-radius:17px;padding:14px;text-align:right;color:var(--ink);font:inherit;cursor:pointer;box-shadow:var(--shadow);min-height:88px}
+.tile .ico{font-size:22px;display:block;margin-bottom:7px}.tile b{font-size:13px}.tile small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+button{font-family:inherit;cursor:pointer}.btn{border:0;background:var(--rose);color:white;border-radius:12px;padding:11px 15px;font-weight:700}.btn.secondary{background:#f3e8e5;color:#77595a}.btn.ghost{background:white;color:var(--rose);border:1px solid var(--rose2)}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fffdf9ed;backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));z-index:5}
+nav button{border:0;background:none;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px}nav button span{font-size:19px}nav button.active{color:var(--rose);font-weight:800}
+.view{display:none}.view.active{display:block}.toolbar{display:flex;align-items:center;justify-content:space-between;margin:4px 0 12px}.toolbar h2{margin:0;font-size:18px}
+form{display:grid;gap:10px}.field{display:grid;gap:5px}label{font-size:12px;color:var(--muted)}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fffdfa;color:var(--ink);font:inherit;outline:none}input:focus,select:focus{border-color:var(--rose)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.list{display:grid;gap:8px}.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px;background:#fff;border:1px solid var(--line);border-radius:13px}.item.due-unpaid{background:var(--softred);border-color:#f0d2d5}.item.due-paid{background:var(--softgreen);border-color:#d2e7d7}.item small{display:block;color:var(--muted);font-size:11px}.amount{font-weight:800;white-space:nowrap}.pos{color:var(--green)}.neg{color:#b36f73}
+.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:12px}.tabs button{white-space:nowrap;border:1px solid var(--line);background:white;border-radius:99px;padding:8px 12px;color:var(--muted)}.tabs button.active{background:var(--rose2);color:#805d60;border-color:var(--rose2)}
+.note{background:#f8f0e9;border-radius:12px;padding:10px;color:#766968;font-size:11px;line-height:1.8}
+.empty{text-align:center;color:var(--muted);padding:20px}
+.total-line{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;margin-top:10px;font-weight:700}
+.smallbtn{border:0;background:#f6eeee;color:#9b666b;border-radius:8px;padding:5px 8px;font-size:11px}
+.report-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:#fff;margin-top:10px}.report-table{width:100%;border-collapse:collapse;min-width:560px;font-size:12px}.report-table th{background:#f3e9e9;color:#765e62;font-weight:700}.report-table th,.report-table td{padding:10px 8px;text-align:right;border-bottom:1px solid #f0e9e6}.report-table tbody tr:nth-child(even){background:#fcfaf8}.report-table tfoot td{background:#eaf2eb;font-weight:800;color:#486b53}.modal-backdrop{position:fixed;inset:0;background:#30262966;display:none;align-items:center;justify-content:center;padding:18px;z-index:30}.modal-backdrop.open{display:flex}.modal{background:#fffdfa;border-radius:20px;padding:16px;width:min(100%,360px);box-shadow:0 18px 60px #32252a35}.cal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.cal-head button{border:0;background:#f2e5e7;border-radius:10px;padding:8px 12px;color:#76565e}.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}.cal-grid span{font-size:11px;color:var(--muted);padding:6px 0}.cal-grid button{border:0;background:#f7f2ef;border-radius:9px;padding:9px 0;color:var(--ink);font:inherit}.cal-grid button.today{outline:1px solid var(--rose)}.cal-grid button:active,.cal-grid button:hover{background:#e5f0e7}.modal-actions{display:flex;gap:8px;margin-top:12px}.modal-actions button{flex:1}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}.summary{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="top"><div><div class="brand">🌷 دفتر مالی من</div><div class="sub">مدیریت آرام و ساده‌ی حساب‌های خانه و کیک‌پزی</div></div><span class="pill">نسخه شخصی</span></div></header>
+<main>
+<section id="home" class="view active">
+ <div class="section"><h2>خلاصه وضعیت مالی</h2><div class="summary">
+  <div class="stat primary"><small>موجودی محاسبه‌شده</small><strong id="balance">۰</strong></div>
+  <div class="stat income-card"><small>درآمد ثبت‌شده</small><strong id="income">۰</strong></div>
+  <div class="stat expense-card"><small>هزینه ثبت‌شده</small><strong id="expense">۰</strong></div>
+  <div class="stat profit-card"><small>سود سفارش‌های کیک</small><strong id="cakeprofit">۰</strong></div>
+ </div></div>
+ <div class="section"><h2>دسترسی سریع</h2><div class="grid">
+  <button class="tile" onclick="show('ledger')"><span class="ico">🧾</span><b>دخل‌وخرج خانه</b><small>درآمد و هزینه‌ها</small></button>
+  <button class="tile" onclick="show('rent')"><span class="ico">🏡</span><b>اجاره خانه</b><small>اجاره، ودیعه و پرداخت‌ها</small></button>
+  <button class="tile" onclick="show('installments')"><span class="ico">📅</span><b>اقساط و بدهی</b><small>مبلغ و سررسید</small></button>
+  <button class="tile" onclick="show('savings')"><span class="ico">💰</span><b>پس‌انداز</b><small>واریز و برداشت</small></button>
+  <button class="tile" onclick="show('ingredients')"><span class="ico">🧁</span><b>مواد اولیه کیک</b><small>ثبت قیمت و موجودی مبنا</small></button>
+  <button class="tile" onclick="show('cakes')"><span class="ico">🎂</span><b>سفارش‌های کیک</b><small>محاسبه هزینه و سود</small></button>
+ </div></div>
+ <div class="section"><h2>آخرین ثبت‌ها</h2><div id="recent" class="list"></div></div>
+ <div class="section note">اطلاعات این نسخه روی همین مرورگر و دستگاه ذخیره می‌شود. برای حفظ اطلاعات، از بخش «پشتیبان‌گیری» خروجی بگیر.</div>
+</section>
+
+<section id="ledger" class="view"><div class="toolbar"><h2>دخل‌وخرج خانه</h2></div>
+ <div class="panel"><form id="ledgerForm">
+  <div class="row"><div class="field"><label>نوع ثبت</label><select id="ltype"><option value="expense">هزینه</option><option value="income">درآمد</option></select></div><div class="field"><label>تاریخ</label><input id="ldate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲" required></div></div>
+  <div class="row"><div class="field"><label>عنوان</label><input id="ltitle" placeholder="مثلاً خرید نان" required></div><div class="field"><label>دسته‌بندی</label><select id="lcat"><option>خوراک و خرید</option><option>خرید خانه</option><option>پول توجیبی بچه‌ها</option><option>قبوض</option><option>درمان</option><option>رفت‌وآمد</option><option>پوشاک</option><option>تفریح</option><option>درآمد خانوار</option><option>سایر</option></select></div></div>
+  <div id="shoppingFields" class="row" style="display:none"><div class="field"><label>مقدار خرید</label><input id="lqty" type="text" inputmode="decimal" placeholder="مثلاً ۲"></div><div class="field"><label>واحد</label><select id="lunit"><option>کیلوگرم</option><option>گرم</option><option>عدد</option><option>بسته</option><option>لیتر</option><option>متر</option></select></div></div>
+  <div class="field" id="childField" style="display:none"><label>نام فرزند (اختیاری)</label><input id="lchild" placeholder="نام فرزند"></div>
+  <div class="field"><label>مبلغ (تومان)</label><input id="lamount" type="text" inputmode="numeric" required></div><button class="btn">ثبت تراکنش</button>
+ </form></div><div class="section"><h2>تراکنش‌ها</h2><div id="ledgerList" class="list"></div></div>
+</section>
+
+<section id="shopping" class="view"><div class="toolbar"><h2>خریدهای خانه</h2></div>
+ <div class="panel"><form id="shopForm">
+  <div class="row"><div class="field"><label>نام کالا</label><input id="sname" placeholder="مثلاً برنج" required></div><div class="field"><label>تاریخ خرید</label><input id="sdate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲" required></div></div>
+  <div class="row"><div class="field"><label>مقدار</label><input id="sqty" type="text" inputmode="decimal" step="0.001" placeholder="مثلاً ۲" required></div><div class="field"><label>واحد</label><select id="sunit"><option>کیلوگرم</option><option>گرم</option><option>عدد</option><option>بسته</option><option>لیتر</option><option>متر</option></select></div></div>
+  <div class="field"><label>قیمت کل (تومان)</label><input id="sprice" type="text" inputmode="decimal" required></div><button class="btn">ثبت خرید</button>
+ </form></div><div class="section"><h2>سابقه خریدها</h2><div id="shopList" class="list"></div></div>
+</section>
+
+<section id="rent" class="view"><div class="toolbar"><h2>اجاره و ودیعه خانه</h2></div>
+ <div class="panel"><form id="rentForm">
+  <div class="row"><div class="field"><label>نوع ثبت</label><select id="rtype"><option value="rent">پرداخت اجاره</option><option value="deposit">ودیعه / پول پیش</option></select></div><div class="field"><label>تاریخ</label><input id="rdate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲" required></div></div>
+  <div class="field"><label>مبلغ (تومان)</label><input id="ramount" type="text" inputmode="decimal" required></div>
+  <div class="field"><label>توضیحات</label><input id="rnote" placeholder="مثلاً اجاره آذر"></div><button class="btn">ثبت</button>
+ </form></div><div class="section"><h2>تاریخچه اجاره و ودیعه</h2><div id="rentList" class="list"></div></div>
+</section>
+
+<section id="installments" class="view"><div class="toolbar"><h2>اقساط و بدهی‌ها</h2></div>
+ <div class="panel"><form id="instForm">
+  <div class="field"><label>عنوان قسط یا بدهی</label><input id="iname" placeholder="مثلاً قسط وام" required></div>
+  <div class="row"><div class="field"><label>مبلغ هر قسط (تومان)</label><input id="iamount" type="text" inputmode="decimal" required></div><div class="field"><label>تعداد کل اقساط</label><input id="icount" type="text" inputmode="decimal" required></div></div>
+  <div class="field"><label>تاریخ سررسید اولین قسط</label><input id="idate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲"></div><button class="btn">ثبت قسط</button>
+ </form></div><div class="section"><h2>فهرست اقساط</h2><div id="instList" class="list"></div></div>
+</section>
+
+<section id="family" class="view"><div class="toolbar"><h2>پول توجیبی بچه‌ها</h2></div>
+ <div class="panel"><form id="familyForm">
+  <div class="row"><div class="field"><label>نام فرزند</label><input id="fname" placeholder="نام" required></div><div class="field"><label>تاریخ</label><input id="fdate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲" required></div></div>
+  <div class="row"><div class="field"><label>نوع</label><select id="ftype"><option value="income">واریز پول توجیبی</option><option value="expense">خرج‌کرد</option></select></div><div class="field"><label>مبلغ (تومان)</label><input id="famount" type="text" inputmode="decimal" required></div></div><div class="field"><label>توضیحات</label><input id="fnote"></div><button class="btn">ثبت</button>
+ </form></div><div class="section"><h2>گردش حساب بچه‌ها</h2><div id="familyList" class="list"></div></div>
+</section>
+
+<section id="savings" class="view"><div class="toolbar"><h2>پس‌انداز</h2></div>
+ <div class="panel"><div class="stat"><small>موجودی پس‌انداز</small><strong id="savingBalance">۰ تومان</strong></div><form id="savingForm" style="margin-top:12px">
+  <div class="row"><div class="field"><label>نوع</label><select id="svtype"><option value="income">واریز به پس‌انداز</option><option value="expense">برداشت از پس‌انداز</option></select></div><div class="field"><label>تاریخ</label><input id="svdate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲" required></div></div>
+  <div class="field"><label>مبلغ (تومان)</label><input id="svamount" type="text" inputmode="decimal" required></div><div class="field"><label>توضیحات</label><input id="svnote"></div><button class="btn">ثبت پس‌انداز</button>
+ </form></div><div class="section"><h2>گردش پس‌انداز</h2><div id="savingList" class="list"></div></div>
+</section>
+
+<section id="ingredients" class="view"><div class="toolbar"><h2>مواد اولیه کیک</h2></div>
+ <div class="note">قیمت خرید هر ماده را یک بار ثبت کن. هنگام ثبت سفارش، مقدار مصرفی را وارد می‌کنی و برنامه هزینه آن را بر اساس قیمت واحد حساب می‌کند. با تغییر قیمت، قیمت جدید را ثبت کن.</div>
+ <div class="panel" style="margin-top:10px"><form id="ingForm">
+  <div class="row"><div class="field"><label>نام ماده اولیه</label><input id="gname" placeholder="مثلاً خامه قنادی" required></div><div class="field"><label>تاریخ خرید</label><input id="gdate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲"></div></div>
+  <div class="row"><div class="field"><label>قیمت خرید (تومان)</label><input id="gprice" type="text" inputmode="decimal" required></div><div class="field"><label>مقدار بسته خریداری‌شده</label><input id="gqty" type="text" inputmode="decimal" step="0.001" required></div></div>
+  <div class="field"><label>واحد مقدار</label><select id="gunit"><option value="کیلوگرم">کیلوگرم</option><option value="گرم">گرم</option><option value="میلی‌لیتر">میلی‌لیتر</option><option value="عدد">عدد</option><option value="بسته">بسته</option></select></div><button class="btn">ثبت / به‌روزرسانی قیمت ماده</button>
+ </form></div><div class="section"><h2>فهرست مواد اولیه</h2><div id="ingList" class="list"></div></div>
+</section>
+
+<section id="cakes" class="view"><div class="toolbar"><h2>سفارش‌های کیک</h2></div>
+ <div class="panel"><form id="cakeForm">
+  <div class="row"><div class="field"><label>نام کیک / مشتری</label><input id="cname" placeholder="مثلاً کیک تولد آوا" required></div><div class="field"><label>تاریخ سفارش</label><input id="cdate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲" required></div></div>
+  <div class="row"><div class="field"><label>وزن کیک (کیلوگرم)</label><input id="cweight" type="text" inputmode="decimal" step=".1" placeholder="مثلاً ۲"></div><div class="field"><label>قیمت فروش (تومان)</label><input id="csale" type="text" inputmode="decimal" required></div></div>
+  <div class="field"><label>مواد مصرفی (هر ماده و مقدار مصرف)</label><div id="cakeIngredients"></div><button type="button" class="btn secondary" onclick="addIngredientRow()">+ افزودن ماده مصرفی</button></div>
+  <div class="field"><label>هزینه‌های جانبی (خامه/تزیینات/جعبه/برق و ... که در بالا ثبت نشده‌اند)</label><input id="cextra" type="text" inputmode="decimal" value="0"></div>
+  <div class="field"><label>وضعیت سفارش</label><select id="cstatus"><option>در حال آماده‌سازی</option><option>تحویل‌شده</option><option>لغوشده</option></select></div>
+  <div class="note" id="cakeEstimate">هزینه مواد و سود پس از وارد کردن مواد محاسبه می‌شود.</div><button class="btn">ثبت سفارش و محاسبه سود</button>
+ </form></div><div class="section"><h2>سفارش‌ها و سود</h2><div id="cakeList" class="list"></div></div>
+</section>
+
+<section id="reports" class="view"><div class="toolbar"><h2>گزارش‌گیری</h2></div><div class="panel">
+ <div class="row"><div class="field"><label>از تاریخ شمسی</label><input id="repFrom" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۱/۰۱"></div><div class="field"><label>تا تاریخ شمسی</label><input id="repTo" type="text" inputmode="numeric" placeholder="۱۴۰۵/۱۲/۲۹"></div></div>
+ <div class="field"><label>جست‌وجوی عنوان یا کالا (مثلاً نان)</label><input id="repSearch" placeholder="نام کالا، عنوان هزینه، مشتری... "></div>
+ <div class="field"><label>نوع گزارش</label><select id="repType"><option value="all">همه موارد</option><option value="ledger">دخل‌وخرج خانه</option><option value="shopping">خریدهای خانه</option><option value="rent">اجاره و ودیعه</option><option value="installments">پرداخت اقساط</option><option value="family">پول توجیبی</option><option value="savings">پس‌انداز</option><option value="ingredients">مواد اولیه کیک</option><option value="cakes">سفارش‌های کیک</option></select></div>
+ <button class="btn" onclick="renderReport()">نمایش گزارش</button><div id="reportBox" style="margin-top:14px"></div></div></section>
+<section id="backup" class="view"><div class="toolbar"><h2>پشتیبان‌گیری و تنظیمات</h2></div><div class="panel">
+ <p>برای اینکه اطلاعاتت از دست نرود، هر چند وقت یک بار فایل پشتیبان بگیر.</p><button class="btn" onclick="backup()">⬇ دریافت فایل پشتیبان</button>
+ <div class="field" style="margin-top:16px"><label>بازیابی فایل پشتیبان</label><input type="file" id="restoreFile" accept="application/json"></div>
+ <button class="btn secondary" onclick="document.getElementById('restoreFile').click()">انتخاب فایل برای بازیابی</button>
+ <div class="note" style="margin-top:15px">اطلاعات در حافظه همین مرورگر ذخیره می‌شود. پاک کردن داده‌های مرورگر یا تعویض گوشی ممکن است اطلاعات را حذف کند؛ فایل پشتیبان را در جای امن نگه دار.</div>
+ </div></section>
+</main>
+<div id="calendarModal" class="modal-backdrop" aria-hidden="true"><div class="modal"><div class="cal-head"><button type="button" onclick="changeCalMonth(-1)">‹ ماه قبل</button><b id="calTitle">تقویم شمسی</b><button type="button" onclick="changeCalMonth(1)">ماه بعد ›</button></div><div class="cal-grid" id="calGrid"></div><div class="modal-actions"><button class="btn secondary" type="button" onclick="closeCalendar()">انصراف</button><button class="btn" type="button" onclick="pickToday()">امروز</button></div></div></div>
+<div id="paymentModal" class="modal-backdrop"><div class="modal"><h3 style="margin:0 0 12px">ثبت پرداخت قسط</h3><div class="field"><label>مبلغ پرداختی (تومان)</label><input id="payAmount" type="text" inputmode="numeric" placeholder="مبلغ پرداختی"></div><div class="field" style="margin-top:10px"><label>تاریخ پرداخت</label><input id="payDate" type="text" inputmode="numeric" placeholder="تاریخ شمسی" readonly></div><div class="modal-actions"><button class="btn secondary" type="button" onclick="closePayment()">انصراف</button><button class="btn" type="button" onclick="confirmPayment()">ثبت پرداخت</button></div></div></div>
+<nav>
+ <button class="active" data-go="home"><span>⌂</span>خانه</button>
+ <button data-go="ledger"><span>🧾</span>تراکنش</button>
+ <button data-go="cakes"><span>🎂</span>کیک‌پزی</button>
+ <button data-go="reports"><span>📊</span>گزارش</button>
+ <button data-go="backup"><span>⚙️</span>بیشتر</button>
+</nav>
+<script>
+const KEY='daftarMaliV1';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"ledger":[],"shopping":[],"rent":[],"installments":[],"family":[],"savings":[],"ingredients":[],"cakes":[]}');
+['ledger','shopping','rent','installments','family','savings','ingredients','cakes'].forEach(k=>db[k]??=[]);
+const $=id=>document.getElementById(id);
+const money=n=>(Number(n)||0).toLocaleString('en-US')+' تومان';
+const parseNum=v=>Number(String(v??'').replace(/[٬،,\s]/g,'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)))||0;
+const fmtNum=v=>{let z=String(v??'').replace(/[٬،,\s]/g,'').replace(/[^0-9۰-۹٠-٩.]/g,'');let parts=z.split('.');parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');return parts.join('.');};
+// Jalali/Gregorian conversion
+function g2j(gy,gm,gd){let gdm=[0,31,59,90,120,151,181,212,243,273,304,334],gy2=gm>2?gy+1:gy;let days=355666+365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+gdm[gm-1];let jy=-1595+33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}let jm=days<186?1+Math.floor(days/31):7+Math.floor((days-186)/30);let jd=1+(days<186?days%31:(days-186)%30);return [jy,jm,jd]}
+function j2g(jy,jm,jd){jy+=1595;let days=-355668+365*jy+Math.floor(jy/33)*8+Math.floor(((jy%33)+3)/4)+jd+(jm<7?(jm-1)*31:186+(jm-7)*30);let gy=400*Math.floor(days/146097);days%=146097;if(days>36524){gy+=100*Math.floor(--days/36524);days%=36524;if(days>=365)days++;}gy+=4*Math.floor(days/1461);days%=1461;if(days>365){gy+=Math.floor((days-1)/365);days=(days-1)%365;}let gd=days+1;let sal=[0,31,(gy%4===0&&gy%100!==0)||gy%400===0?29:28,31,30,31,30,31,31,30,31,30,31],gm=1;while(gm<=12&&gd>sal[gm]){gd-=sal[gm];gm++;}return [gy,gm,gd]}
+function normDate(v){let s=String(v||'').trim().replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/-/g,'/');if(!s)return '';let a=s.split('/').map(Number);if(a.length!==3||a.some(Number.isNaN))return '';if(a[0]>1700)return `${a[0]}-${String(a[1]).padStart(2,'0')}-${String(a[2]).padStart(2,'0')}`;let [y,m,d]=j2g(a[0],a[1],a[2]);return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
+function showDate(v){if(!v)return '—';let a=String(v).slice(0,10).split('-').map(Number);if(a.length!==3)return v;let j=g2j(...a);return j.map(x=>String(x).padStart(2,'0')).join('/')}
+function todayJ(){let d=new Date();return g2j(d.getFullYear(),d.getMonth()+1,d.getDate()).map(x=>String(x).padStart(2,'0')).join('/')}
+const today=todayJ();
+document.querySelectorAll('input[type="text"][inputmode="numeric"],input[type="text"][inputmode="decimal"]').forEach(el=>{if(el.id.endsWith('date')||el.id==='idate'||el.id==='payDate')el.value=today;});
+function bindNumberFormatting(root=document){root.querySelectorAll('input[inputmode="numeric"],input[inputmode="decimal"]').forEach(el=>{if(el.dataset.formatBound||el.id.toLowerCase().includes('date'))return;el.dataset.formatBound='1';el.addEventListener('input',()=>{let pos=el.selectionStart;el.value=fmtNum(el.value);try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}});if(el.value)el.value=fmtNum(el.value)})}
+bindNumberFormatting();
+let calTarget=null,calYear=0,calMonth=0;
+const monthNames=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+function jalaliParts(v){let z=String(v||today).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/-/g,'/').split('/').map(Number);return z.length===3&&z.every(Boolean)?z:today.split('/').map(Number)}
+function jMonthDays(y,m){if(m<=6)return 31;if(m<=11)return 30;let a=j2g(y,1,1),b=j2g(y+1,1,1);return (Date.UTC(...[b[0],b[1]-1,b[2]])-Date.UTC(...[a[0],a[1]-1,a[2]]))===366?30:29}
+function openCalendar(el){calTarget=el;let a=jalaliParts(el.value||today);calYear=a[0];calMonth=a[1];drawCalendar();$('calendarModal').classList.add('open')}
+function closeCalendar(){$('calendarModal').classList.remove('open');calTarget=null}
+function changeCalMonth(n){calMonth+=n;if(calMonth<1){calMonth=12;calYear--}if(calMonth>12){calMonth=1;calYear++}drawCalendar()}
+function drawCalendar(){ $('calTitle').textContent=monthNames[calMonth-1]+' '+calYear;let html=['ش','ی','د','س','چ','پ','ج'].map(x=>`<span>${x}</span>`).join('');let first=j2g(calYear,calMonth,1),offset=(new Date(first[0],first[1]-1,first[2]).getDay()+1)%7;for(let i=0;i<offset;i++)html+='<span></span>';let days=jMonthDays(calYear,calMonth),now=today.split('/').map(Number);for(let d=1;d<=days;d++){let cls=now[0]===calYear&&now[1]===calMonth&&now[2]===d?'today':'';html+=`<button type="button" class="${cls}" onclick="selectCalendarDay(${d})">${d}</button>`}$('calGrid').innerHTML=html}
+function selectCalendarDay(d){if(calTarget){calTarget.value=[calYear,calMonth,d].map(x=>String(x).padStart(2,'0')).join('/');calTarget.dispatchEvent(new Event('change',{bubbles:true}));}closeCalendar()}
+function pickToday(){let a=today.split('/').map(Number);calYear=a[0];calMonth=a[1];selectCalendarDay(a[2])}
+document.querySelectorAll('input[id$="date"],#idate,#repFrom,#repTo,#payDate').forEach(el=>{el.readOnly=true;el.addEventListener('click',()=>openCalendar(el));el.addEventListener('focus',()=>openCalendar(el))});
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));window.scrollTo(0,0);if(id==='reports')renderReport()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.go));
+function item(title,sub,amount,cls='',del=''){return `<div class="item"><div><b>${esc(title)}</b><small>${esc(sub||'')}</small></div><div style="text-align:left"><div class="amount ${cls}">${amount}</div>${del}</div></div>`}
+function removeBtn(arr,id){return `<button class="smallbtn" onclick="removeEntry('${arr}','${id}')">حذف</button>`}
+function removeEntry(arr,id){if(confirm('این مورد حذف شود؟')){db[arr]=db[arr].filter(x=>x.id!==id);save()}}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function sum(a){return a.reduce((s,x)=>s+(Number(x.amount)||0),0)}
+$('lcat').onchange=()=>{let c=$('lcat').value;$('shoppingFields').style.display=c==='خرید خانه'?'grid':'none';$('childField').style.display=c==='پول توجیبی بچه‌ها'?'grid':'none';if(c==='خرید خانه'||c==='پول توجیبی بچه‌ها')$('ltype').value='expense'};
+function renderAll(){
+ let inc=sum(db.ledger.filter(x=>x.type==='income')), exp=sum(db.ledger.filter(x=>x.type==='expense'))+sum(db.shopping.filter(x=>!db.ledger.some(t=>t.id===x.id)))+sum(db.rent.filter(x=>x.type==='rent'))+sum(db.family.filter(x=>x.type==='expense'&&!db.ledger.some(t=>t.id===x.id)));
+ let profit=db.cakes.reduce((s,x)=>s+(x.profit||0),0);
+ $('balance').textContent=money(inc-exp+profit);$('income').textContent=money(inc);$('expense').textContent=money(exp);$('cakeprofit').textContent=money(profit);
+ $('ledgerList').innerHTML=db.ledger.slice().reverse().map(x=>item(x.title,(x.date?showDate(x.date)+' · ':'')+x.cat,(x.type==='income'?'+':'−')+money(x.amount),x.type==='income'?'pos':'neg',removeBtn('ledger',x.id))).join('')||'<div class="empty">هنوز تراکنشی ثبت نشده است.</div>';
+ $('shopList').innerHTML=db.shopping.slice().reverse().map(x=>item(x.name,`${x.qty} ${x.unit} · ${showDate(x.date)}`,money(x.amount),'neg',removeBtn('shopping',x.id))).join('')||'<div class="empty">خریدی ثبت نشده است.</div>';
+ $('rentList').innerHTML=db.rent.slice().reverse().map(x=>item(x.type==='rent'?'پرداخت اجاره':'ودیعه',x.note+' · '+showDate(x.date),money(x.amount),'neg',removeBtn('rent',x.id))).join('')||'<div class="empty">موردی ثبت نشده است.</div>';
+ $('instList').innerHTML=db.installments.map(x=>{let paid=sum(x.payments||[]),count=x.count||0,base=x.date?g2j(...x.date.split('-').map(Number)):[],now=today.split('/').map(Number),idx=base.length?((now[0]-base[0])*12+now[1]-base[1]):-1,due=idx>=0&&idx<count,paidThis=due&&(x.payments||[]).filter(p=>{let z=g2j(...p.date.split('-').map(Number));return z[0]===now[0]&&z[1]===now[1]}).reduce((a,p)=>a+p.amount,0)>=x.amount,cls=due?(paidThis?'due-paid':'due-unpaid'):'';let status=due?(paidThis?'پرداخت این ماه انجام شده':'پرداخت این ماه انجام نشده'):'خارج از دوره اقساط';return `<div class="item ${cls}"><div><b>${esc(x.name)}</b><small>${status} · ${count} قسط · پرداخت‌شده ${money(paid)} · سررسید اول ${showDate(x.date)}</small></div><div style="text-align:left"><div class="amount">${money(Math.max(0,(x.amount*count)-paid))}</div><button class="smallbtn" onclick="payInst('${x.id}')">پرداخت</button> ${removeBtn('installments',x.id)}</div></div>`}).join('')||'<div class="empty">قسطی ثبت نشده است.</div>';
+ $('familyList').innerHTML=db.family.slice().reverse().map(x=>item(x.name+' · '+(x.type==='income'?'واریز':'خرج'),x.note+' · '+showDate(x.date),(x.type==='income'?'+':'−')+money(x.amount),x.type==='income'?'pos':'neg',removeBtn('family',x.id))).join('')||'<div class="empty">هنوز موردی ثبت نشده است.</div>';
+ let sb=sum(db.savings.filter(x=>x.type==='income'))-sum(db.savings.filter(x=>x.type==='expense'));$('savingBalance').textContent=money(sb);
+ $('savingList').innerHTML=db.savings.slice().reverse().map(x=>item(x.type==='income'?'واریز':'برداشت',x.note+' · '+showDate(x.date),(x.type==='income'?'+':'−')+money(x.amount),x.type==='income'?'pos':'neg',removeBtn('savings',x.id))).join('')||'<div class="empty">پس‌اندازی ثبت نشده است.</div>';
+ $('ingList').innerHTML=db.ingredients.map(x=>item(x.name,`هر ${x.qty} ${x.unit} · قیمت ${money(x.price)} · نرخ واحد ${money(x.price/x.qty)}`,money(x.price),'',removeBtn('ingredients',x.id))).join('')||'<div class="empty">ماده اولیه‌ای ثبت نشده است.</div>';
+ $('cakeList').innerHTML=db.cakes.slice().reverse().map(x=>item(x.name,`${showDate(x.date)} · وزن ${x.weight||'—'} کیلو · هزینه ${money(x.cost)} · ${x.status}`,`سود ${money(x.profit)}`,x.profit>=0?'pos':'neg',removeBtn('cakes',x.id))).join('')||'<div class="empty">هنوز سفارشی ثبت نشده است.</div>';
+ let all=[...db.ledger.map(x=>({...x,desc:x.title})),...db.shopping.map(x=>({...x,desc:'خرید '+x.name})),...db.cakes.map(x=>({...x,desc:'سفارش '+x.name,amount:x.profit}))].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
+ $('recent').innerHTML=all.map(x=>item(x.desc,showDate(x.date),money(x.amount),x.type==='income'||x.profit>=0?'pos':'')).join('')||'<div class="empty">برای شروع، اولین درآمد یا هزینه‌ات را ثبت کن.</div>';
+ renderReport();
+}
+$('ledgerForm').onsubmit=e=>{e.preventDefault();let cat=$('lcat').value,title=$('ltitle').value.trim(),date=normDate($('ldate').value),amount=parseNum($('lamount').value),type=$('ltype').value;if(!date){alert('تاریخ شمسی را به شکل ۱۴۰۵/۰۹/۰۲ وارد کن.');return}let entry={id:id(),type,date,title,cat,amount};if(cat==='خرید خانه'){entry.qty=parseNum($('lqty').value);entry.unit=$('lunit').value;}if(cat==='پول توجیبی بچه‌ها')entry.child=$('lchild').value;db.ledger.push(entry);if(cat==='خرید خانه')db.shopping.push({id:entry.id,name:title,date,qty:entry.qty,unit:entry.unit,amount});if(cat==='پول توجیبی بچه‌ها')db.family.push({id:entry.id,name:$('lchild').value||title,date,type:'expense',amount,note:title});e.target.reset();$('ldate').value=today;$('shoppingFields').style.display='none';$('childField').style.display='none';save()};
+$('shopForm').onsubmit=e=>{e.preventDefault();db.shopping.push({id:id(),name:$('sname').value,date:normDate($('sdate').value),qty:parseNum($('sqty').value),unit:$('sunit').value,amount:parseNum($('sprice').value)});e.target.reset();$('sdate').value=today;save()};
+$('rentForm').onsubmit=e=>{e.preventDefault();db.rent.push({id:id(),type:$('rtype').value,date:normDate($('rdate').value),amount:parseNum($('ramount').value),note:$('rnote').value});e.target.reset();$('rdate').value=today;save()};
+$('instForm').onsubmit=e=>{e.preventDefault();let count=parseNum($('icount').value),amount=parseNum($('iamount').value),date=normDate($('idate').value);if(!count||!amount){alert('مبلغ و تعداد اقساط را درست وارد کن.');return}db.installments.push({id:id(),name:$('iname').value,amount,count,paid:0,date,payments:[]});e.target.reset();$('idate').value=today;save()};
+let paymentInstallmentId=null;
+function payInst(k){let x=db.installments.find(x=>x.id===k);if(!x)return;paymentInstallmentId=k;$('payAmount').value=fmtNum(x.amount);$('payDate').value=today;$('paymentModal').classList.add('open');}
+function closePayment(){$('paymentModal').classList.remove('open');paymentInstallmentId=null}
+function confirmPayment(){let x=db.installments.find(x=>x.id===paymentInstallmentId);if(!x)return;let amount=parseNum($('payAmount').value),date=normDate($('payDate').value);if(!amount){alert('مبلغ معتبر وارد کن.');return}if(!date){alert('تاریخ پرداخت را انتخاب کن.');return}let remaining=x.amount*x.count-sum(x.payments||[]);if(amount>remaining){alert('مبلغ پرداختی از مانده کل بدهی بیشتر است. مانده: '+money(remaining));return}x.payments??=[];x.payments.push({id:id(),date,amount});db.ledger.push({id:id(),type:'expense',date,title:'پرداخت قسط: '+x.name,cat:'قسط و بدهی',amount,installmentId:x.id});closePayment();save()}
+$('familyForm').onsubmit=e=>{e.preventDefault();db.family.push({id:id(),name:$('fname').value,date:normDate($('fdate').value),type:$('ftype').value,amount:parseNum($('famount').value),note:$('fnote').value});e.target.reset();$('fdate').value=today;save()};
+$('savingForm').onsubmit=e=>{e.preventDefault();db.savings.push({id:id(),type:$('svtype').value,date:normDate($('svdate').value),amount:parseNum($('svamount').value),note:$('svnote').value});e.target.reset();$('svdate').value=today;save()};
+$('ingForm').onsubmit=e=>{e.preventDefault();let name=$('gname').value.trim(),old=db.ingredients.find(x=>x.name.toLowerCase()===name.toLowerCase()),obj={id:old?.id||id(),name,date:normDate($('gdate').value),price:parseNum($('gprice').value),qty:parseNum($('gqty').value),unit:$('gunit').value};if(old)Object.assign(old,obj);else db.ingredients.push(obj);e.target.reset();save()};
+function addIngredientRow(){let opts=db.ingredients.map(x=>`<option value="${x.id}">${esc(x.name)} (${money(x.price/x.qty)} / ${x.unit})</option>`).join('');if(!opts){alert('ابتدا مواد اولیه را ثبت کن.');return}let d=document.createElement('div');d.className='row ingrow';d.style.marginTop='7px';d.innerHTML=`<div class="field"><label>ماده</label><select class="ingid">${opts}</select></div><div class="field"><label>مقدار مصرف (<span class="ingunit">${esc(db.ingredients[0].unit)}</span>)</label><input class="ingqty" type="text" inputmode="decimal" value="0"></div>`;$('cakeIngredients').appendChild(d);bindNumberFormatting(d);d.querySelector('.ingid').onchange=()=>{let ing=db.ingredients.find(x=>x.id===d.querySelector('.ingid').value);d.querySelector('.ingunit').textContent=ing?.unit||'';estimateCake()};d.querySelector('.ingqty').oninput=()=>{d.querySelector('.ingqty').value=fmtNum(d.querySelector('.ingqty').value);estimateCake()}}
+function cakeCost(){let c=0;document.querySelectorAll('.ingrow').forEach(r=>{let ing=db.ingredients.find(x=>x.id===r.querySelector('.ingid').value),q=parseNum(r.querySelector('.ingqty').value);if(ing&&ing.qty>0)c+=ing.price/ing.qty*q});return c}
+function estimateCake(){let cost=cakeCost()+parseNum($('cextra').value),sale=parseNum($('csale').value);$('cakeEstimate').textContent=`هزینه مواد و جانبی: ${money(cost)} | سود تخمینی: ${money(sale-cost)}`}
+['csale','cextra'].forEach(x=>$(x).oninput=()=>{ $(x).value=fmtNum($(x).value);estimateCake()});
+$('cakeForm').onsubmit=e=>{e.preventDefault();let ingredients=[];document.querySelectorAll('.ingrow').forEach(r=>{let ing=db.ingredients.find(x=>x.id===r.querySelector('.ingid').value),qty=parseNum(r.querySelector('.ingqty').value);if(ing&&qty)ingredients.push({name:ing.name,qty,unit:ing.unit,cost:ing.price/ing.qty*qty})});let cost=ingredients.reduce((s,x)=>s+x.cost,0)+parseNum($('cextra').value),sale=parseNum($('csale').value);db.cakes.push({id:id(),name:$('cname').value,date:normDate($('cdate').value),weight:$('cweight').value,sale,cost,profit:sale-cost,status:$('cstatus').value,ingredients});e.target.reset();$('cdate').value=today;$('cakeIngredients').innerHTML='';$('cakeEstimate').textContent='هزینه مواد و سود پس از وارد کردن مواد محاسبه می‌شود.';save()};
+function allReportRows(){return [
+ ...db.ledger.filter(x=>!x.installmentId).map(x=>({date:x.date,name:x.title,kind:x.cat==='خرید خانه'?'خرید خانه':x.cat==='پول توجیبی بچه‌ها'?'پول توجیبی':'دخل‌وخرج خانه',type:x.type,amount:x.amount,detail:x.cat==='خرید خانه'?`${x.qty||0} ${x.unit||''}`:x.cat==='پول توجیبی بچه‌ها'?(x.child||''):x.cat})),
+ ...db.shopping.filter(x=>!db.ledger.some(t=>t.id===x.id)).map(x=>({date:x.date,name:x.name,kind:'خرید خانه',type:'expense',amount:x.amount,detail:`${x.qty} ${x.unit}`})),
+ ...db.rent.map(x=>({date:x.date,name:x.type==='rent'?'پرداخت اجاره':'ودیعه',kind:'اجاره و ودیعه',type:x.type==='rent'?'expense':'other',amount:x.amount,detail:x.note})),
+ ...db.installments.flatMap(x=>(x.payments||[]).map(p=>({date:p.date,name:'پرداخت قسط: '+x.name,kind:'پرداخت اقساط',type:'expense',amount:p.amount,detail:'پرداخت قسط'}))),
+ ...db.family.filter(x=>!db.ledger.some(t=>t.id===x.id)).map(x=>({date:x.date,name:x.name,kind:'پول توجیبی',type:x.type,amount:x.amount,detail:x.note})),
+ ...db.savings.map(x=>({date:x.date,name:x.type==='income'?'واریز پس‌انداز':'برداشت پس‌انداز',kind:'پس‌انداز',type:x.type,amount:x.amount,detail:x.note})),
+ ...db.ingredients.map(x=>({date:x.date||'',name:x.name,kind:'مواد اولیه کیک',type:'expense',amount:x.price,detail:`${x.qty} ${x.unit}`})),
+ ...db.cakes.flatMap(x=>[{date:x.date,name:'فروش '+x.name,kind:'سفارش کیک',type:'income',amount:x.sale,detail:'فروش کیک'},{date:x.date,name:'هزینه '+x.name,kind:'سفارش کیک',type:'expense',amount:x.cost,detail:'هزینه مواد و جانبی'}])
+ ]}
+function renderReport(){let rows=allReportRows(),from=normDate($('repFrom')?.value),to=normDate($('repTo')?.value),q=($('repSearch')?.value||'').trim().toLowerCase(),kind=$('repType')?.value||'all';if(from)rows=rows.filter(x=>x.date&&x.date>=from);if(to)rows=rows.filter(x=>x.date&&x.date<=to);if(q)rows=rows.filter(x=>(x.name+' '+x.detail+' '+x.kind).toLowerCase().includes(q));if(kind!=='all')rows=rows.filter(x=>x.kind===({ledger:'دخل‌وخرج خانه',shopping:'خرید خانه',rent:'اجاره و ودیعه',installments:'پرداخت اقساط',family:'پول توجیبی',savings:'پس‌انداز',ingredients:'مواد اولیه کیک',cakes:'سفارش کیک'}[kind]));rows.sort((a,b)=>(b.date||'').localeCompare(a.date||''));let total=rows.reduce((s,x)=>s+(x.type==='expense'?-x.amount:x.type==='income'?x.amount:0),0);let sumAmounts=rows.reduce((s,x)=>s+(Number(x.amount)||0),0),incTotal=rows.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),expTotal=rows.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);$('reportBox').innerHTML=`<div class="note">${rows.length} مورد پیدا شد · جمع درآمد ${money(incTotal)} · جمع هزینه ${money(expTotal)} · خالص ${money(total)}</div><div class="report-wrap"><table class="report-table"><thead><tr><th>تاریخ</th><th>عنوان</th><th>دسته</th><th>جزئیات</th><th>نوع</th><th>مبلغ (تومان)</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${showDate(x.date)}</td><td>${esc(x.name)}</td><td>${esc(x.kind)}</td><td>${esc(x.detail||'—')}</td><td>${x.type==='income'?'درآمد':x.type==='expense'?'هزینه':'سایر'}</td><td>${(Number(x.amount)||0).toLocaleString('en-US')}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center">در این بازه موردی پیدا نشد.</td></tr>'}</tbody><tfoot><tr><td colspan="5">جمع مبلغ تمام ردیف‌ها</td><td>${sumAmounts.toLocaleString('en-US')} تومان</td></tr></tfoot></table></div>`}
+function backup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='poshtiban-daftar-mali.json';a.click();URL.revokeObjectURL(a.href)}
+$('restoreFile').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!d.ledger||!d.cakes)throw Error();db=d;['ledger','shopping','rent','installments','family','savings','ingredients','cakes'].forEach(k=>db[k]??=[]);save();alert('اطلاعات بازیابی شد.')}catch(_){alert('فایل پشتیبان معتبر نیست.')}};r.readAsText(f)};
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+renderAll();
+</script>
+</body></html>
